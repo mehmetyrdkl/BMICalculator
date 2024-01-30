@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,14 +14,28 @@ export default function App() {
   const [weight, setWeight] = useState("");
   const [result, setResult] = useState("");
 
+  const weightInputRef = useRef(null);
+
   const handleTapOutside = () => {
     Keyboard.dismiss();
+  };
+
+  //handling the focus to the second input
+  const handleHeightChange = (input) => {
+    setHeight(input);
+    if (input.length === 3) {
+      weightInputRef.current.focus();
+    }
   };
 
   const calculateBMI = () => {
     const heightInMeters = parseFloat(height) / 100;
     const bmi = parseFloat(weight) / (heightInMeters * heightInMeters);
     setResult(bmi.toFixed(2));
+
+    // resetting the form after we get the result
+    setHeight("");
+    setWeight("");
   };
 
   const disableButton = () => {
@@ -36,12 +50,13 @@ export default function App() {
           <TextInput
             style={styles.input}
             placeholder="Your height in cm..."
-            onChangeText={(height) => setHeight(height)}
+            onChangeText={handleHeightChange}
             value={height}
             keyboardType="numeric"
           />
           <TextInput
             style={styles.input}
+            ref={weightInputRef}
             placeholder="Your weight in kgs..."
             onChangeText={(weight) => setWeight(weight)}
             value={weight}
