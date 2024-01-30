@@ -7,6 +7,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Button,
+  StatusBar,
 } from "react-native";
 
 export default function App() {
@@ -32,7 +33,7 @@ export default function App() {
     const heightInMeters = parseFloat(height) / 100;
     const bmi = parseFloat(weight) / (heightInMeters * heightInMeters);
     setResult(bmi.toFixed(2));
-
+    Keyboard.dismiss();
     // resetting the form after we get the result
     setHeight("");
     setWeight("");
@@ -45,6 +46,11 @@ export default function App() {
   return (
     <TouchableWithoutFeedback onPress={handleTapOutside}>
       <View style={styles.appWrapper}>
+        <StatusBar
+          backgroundColor="#f2efe5"
+          barStyle="dark-content"
+          translucent
+        />
         <Text style={styles.title}>BMI Calculator</Text>
         <View style={styles.formWrapper}>
           <TextInput
@@ -73,7 +79,24 @@ export default function App() {
         </View>
         {result !== "" && (
           <View style={styles.resultWrapper}>
-            <Text style={styles.result}>Your BMI is: {result}</Text>
+            <Text style={styles.result}>Your BMI is: </Text>
+            <Text
+              style={[
+                styles.result,
+                {
+                  color:
+                    result < 18.5
+                      ? "#FFA500"
+                      : result >= 18.5 && result < 24.9
+                      ? "#008000"
+                      : result >= 25 && result < 29.9
+                      ? "#FFA500"
+                      : "#FF0000",
+                },
+              ]}
+            >
+              {result}
+            </Text>
           </View>
         )}
       </View>
@@ -84,10 +107,10 @@ export default function App() {
 const styles = StyleSheet.create({
   appWrapper: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "start",
+    backgroundColor: "#f2efe5",
+    alignItems: "center",
     justifyContent: "start",
-    marginTop: 60,
+    paddingTop: 80,
     padding: 20,
   },
   title: {
@@ -109,6 +132,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 60,
+  },
+  resultWrapper: {
+    flexDirection: "row",
   },
   result: {
     paddingTop: 20,
