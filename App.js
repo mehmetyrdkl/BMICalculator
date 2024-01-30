@@ -39,6 +39,30 @@ export default function App() {
     setWeight("");
   };
 
+  const getBMICategory = (result) => {
+    if (result < 18.5) {
+      return "Underweight";
+    } else if (result >= 18.5 && result < 24.9) {
+      return "Normal Weight";
+    } else if (result >= 25 && result < 29.9) {
+      return "Overweight";
+    } else {
+      return "Obese";
+    }
+  };
+
+  const getBMIColor = (result) => {
+    if (result < 18.5) {
+      return "#FFA500";
+    } else if (result >= 18.5 && result < 24.9) {
+      return "#008000";
+    } else if (result >= 25 && result < 29.9) {
+      return "#FFA500";
+    } else {
+      return "#FF0000";
+    }
+  };
+
   const disableButton = () => {
     return height === "" || weight === "";
   };
@@ -79,23 +103,14 @@ export default function App() {
         </View>
         {result !== "" && (
           <View style={styles.resultWrapper}>
-            <Text style={styles.result}>Your BMI is: </Text>
-            <Text
-              style={[
-                styles.result,
-                {
-                  color:
-                    result < 18.5
-                      ? "#FFA500"
-                      : result >= 18.5 && result < 24.9
-                      ? "#008000"
-                      : result >= 25 && result < 29.9
-                      ? "#FFA500"
-                      : "#FF0000",
-                },
-              ]}
-            >
-              {result}
+            <View style={styles.resultRow}>
+              <Text style={styles.result}>Your BMI is: </Text>
+              <Text style={[styles.result, { color: getBMIColor(result) }]}>
+                {result}
+              </Text>
+            </View>
+            <Text style={[styles.bmiCategory, { color: getBMIColor(result) }]}>
+              {getBMICategory(result)}
             </Text>
           </View>
         )}
@@ -134,9 +149,15 @@ const styles = StyleSheet.create({
     marginTop: 60,
   },
   resultWrapper: {
+    flexDirection: "column",
+  },
+  resultRow: {
     flexDirection: "row",
   },
   result: {
     paddingTop: 20,
+  },
+  bmiCategory: {
+    paddingTop: 10,
   },
 });
